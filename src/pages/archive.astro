@@ -1,0 +1,45 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const all = (await getCollection('posts', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+
+const byYear = all.reduce<Record<string, typeof all>>((acc, p) => {
+  const y = String(p.data.pubDate.getFullYear());
+  (acc[y] ??= []).push(p);
+  return acc;
+}, {});
+
+const years = Object.keys(byYear).sort((a, b) => Number(b) - Number(a));
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }).toUpperCase();
+---
+<BaseLayout title="Archive — florin.log" description="The complete archive.">
+  <section class="page">
+    <h1>The <em>archive.</em></h1>
+    {years.map((y) => (
+      <div style="margin-top: 2.5rem;">
+        <div class="section-head" style="border-bottom-color: var(--paper-rule); padding: 0.6rem 0;">
+          <h2 style="font-style: normal; font-family: var(--font-mono); font-size: 0.85rem; letter-spacing: 0.2em;">{y}</h2>
+          <span class="count">{String(byYear[y].length).padStart(2, '0')}</span>
+        </div>
+        <ol class="posts">
+          {byYear[y].map((post) => (
+            <li class="post-row">
+              <span class="num">{fmt(post.data.pubDate)}</span>
+              <div class="body">
+                <h3><a href={`/posts/${post.id}/`}>{post.data.title}</a></h3>
+                <p>{post.data.description}</p>
+              </div>
+              <div class="tags">{post.data.tags.slice(0, 3).map((t) => <span>{t}</span>)}</div>
+              <div class="date">{post.data.readingTime ?? ''}</div>
+              <span class="arrow">→</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+    ))}
+  </section>
+</BaseLayout>

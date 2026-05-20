@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const all = await getCollection('posts', ({ data }) => !data.draft);
+const tagCount = new Map<string, number>();
+for (const p of all) for (const t of p.data.tags) tagCount.set(t, (tagCount.get(t) ?? 0) + 1);
+const tags = [...tagCount.entries()].sort((a, b) => b[1] - a[1]);
+---
+<BaseLayout title="Tags — florin.log" description="Browse by tag.">
+  <section class="page">
+    <h1>By <em>subject.</em></h1>
+    <p style="font-family: var(--font-serif); color: var(--ink-soft); margin-bottom: 2rem;">
+      A scattershot taxonomy. Use it as a hint, not a promise.
+    </p>
+    <div style="display: flex; flex-wrap: wrap; gap: 0.6rem 0.8rem;">
+      {tags.map(([tag, n]) => (
+        <a href={`/tags/${tag}/`} style="display:inline-flex;align-items:baseline;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--ink);font-family:var(--font-mono);font-size:0.78rem;letter-spacing:0.05em;text-transform:lowercase;transition:background 180ms,color 180ms;" onmouseover="this.style.background='var(--ink)';this.style.color='var(--paper)'" onmouseout="this.style.background='transparent';this.style.color='var(--ink)'">
+          {tag}
+          <span style="color:var(--accent);font-weight:500;">{n}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

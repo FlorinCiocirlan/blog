@@ -1,0 +1,53 @@
+---
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts', ({ data }) => !data.draft);
+  const tags = new Set<string>();
+  for (const p of posts) for (const t of p.data.tags) tags.add(t);
+  return [...tags].map((tag) => ({
+    params: { tag },
+    props: {
+      tag,
+      posts: posts
+        .filter((p) => p.data.tags.includes(tag))
+        .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()),
+    },
+  }));
+}
+
+type Props = { tag: string; posts: CollectionEntry<'posts'>[] };
+const { tag, posts } = Astro.props;
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+---
+<BaseLayout
+  title={`#${tag} — florin.log`}
+  description={`Posts tagged ${tag}.`}
+>
+  <section class="page">
+    <h1>#{tag}</h1>
+    <p style="color: var(--fg-soft); margin-bottom: 2rem;">
+      {posts.length} {posts.length === 1 ? 'post' : 'posts'} tagged <code>{tag}</code>.
+    </p>
+
+    <ul class="posts">
+      {posts.map((post) => (
+        <li class="post-row">
+          <div class="body">
+            <h3><a href={`/posts/${post.id}/`}>{post.data.title}</a></h3>
+            <p>{post.data.description}</p>
+          </div>
+          <div class="date">{fmt(post.data.pubDate)}</div>
+        </li>
+      ))}
+    </ul>
+
+    <p style="margin-top: 2.5rem;">
+      <a href="/tags/" style="color: var(--fg-mute);">← All tags</a>
+    </p>
+  </section>
+</BaseLayout>
