@@ -487,36 +487,6 @@ If we fixed an edge case, we fixed it once.
 
 That is the difference between component reuse and platform leverage.
 
-## What recruiters and hiring managers should take from this
-
-The important part of this story is not:
-
-> I built an AG Grid wrapper.
-
-The important part is:
-
-> I identified a repeated business cost, understood the implementation pattern causing it, designed a reusable interface, and turned duplicated work into a shared platform capability.
-
-That demonstrates more than frontend development.
-
-It shows:
-
-- technical ownership
-- product thinking
-- cost awareness
-- system design
-- developer experience focus
-- ability to reduce QA and delivery friction
-- architecture that supports business outcomes
-
-A lot of engineers can build a table.
-
-Fewer engineers can notice that the company is paying to build the same table mechanics over and over again.
-
-Even fewer can fix that in a way that improves engineering speed, QA efficiency, user experience, and monthly cost.
-
-That is the work I am proud of.
-
 ## The lesson
 
 The best abstractions are not clever.
