@@ -7,8 +7,6 @@ readingTime: "8 min read"
 draft: false
 ---
 
-# How We Used AI Workspaces to Deliver Faster Without Breaking the Platform
-
 Every technical improvement should start with a business problem.
 
 For us, the problem was simple:
