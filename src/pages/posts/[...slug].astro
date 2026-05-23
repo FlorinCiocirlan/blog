@@ -5,15 +5,37 @@ import PostLayout from '../../layouts/PostLayout.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts', ({ data }) => !data.draft);
-  return posts.map((post) => ({
+  const sorted = [...posts].sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+
+  return sorted.map((post, index) => ({
     params: { slug: post.id },
-    props: { post },
+    props: {
+      post,
+      previousPost: sorted[index + 1],
+      nextPost: sorted[index - 1],
+      relatedPosts: sorted
+        .filter((candidate) => candidate.id !== post.id)
+        .map((candidate) => ({
+          post: candidate,
+          score: candidate.data.tags.filter((tag) => post.data.tags.includes(tag)).length,
+        }))
+        .sort((a, b) => b.score - a.score || b.post.data.pubDate.getTime() - a.post.data.pubDate.getTime())
+        .slice(0, 2)
+        .map(({ post }) => post),
+    },
   }));
 }
 
-type Props = { post: CollectionEntry<'posts'> };
-const { post } = Astro.props;
-const { Content } = await render(post);
+type Props = {
+  post: CollectionEntry<'posts'>;
+  previousPost?: CollectionEntry<'posts'>;
+  nextPost?: CollectionEntry<'posts'>;
+  relatedPosts: CollectionEntry<'posts'>[];
+};
+
+const { post, previousPost, nextPost, relatedPosts } = Astro.props;
+const { Content, headings } = await render(post);
+const tableOfContents = headings.filter((heading) => heading.depth === 2);
 ---
 <PostLayout
   title={post.data.title}
@@ -22,6 +44,10 @@ const { Content } = await render(post);
   updatedDate={post.data.updatedDate}
   tags={post.data.tags}
   readingTime={post.data.readingTime}
+  tableOfContents={tableOfContents}
+  relatedPosts={relatedPosts}
+  previousPost={previousPost}
+  nextPost={nextPost}
 >
   <Content />
 </PostLayout>
