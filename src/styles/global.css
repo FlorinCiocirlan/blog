@@ -303,7 +303,9 @@ a { color: inherit; text-decoration: none; }
   color: var(--fg-mute);
   font-size: 0.9rem;
 }
-.toc a:hover { color: var(--fg); }
+.toc a:hover,
+.toc a.active { color: var(--fg); }
+.toc a.active { font-weight: 500; }
 
 .side-toc {
   position: sticky;
@@ -329,9 +331,24 @@ a { color: inherit; text-decoration: none; }
   line-height: 1.35;
   transition: color 150ms, transform 150ms;
 }
-.side-toc a:hover {
+.side-toc a:hover,
+.side-toc a.active {
   color: var(--fg);
   transform: translateX(2px);
+}
+.side-toc a.active {
+  position: relative;
+  font-weight: 500;
+}
+.side-toc a.active::before {
+  content: "";
+  position: absolute;
+  left: -1.05rem;
+  top: 0.15rem;
+  bottom: 0.15rem;
+  width: 2px;
+  border-radius: 999px;
+  background: var(--fg);
 }
 
 /* Prose */
