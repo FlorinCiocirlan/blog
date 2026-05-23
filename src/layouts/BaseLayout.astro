@@ -4,11 +4,13 @@ import '../styles/global.css';
 interface Props {
   title?: string;
   description?: string;
+  wide?: boolean;
 }
 
 const {
   title = 'florin.log — notes on engineering',
   description = 'Essays on Angular, NestJS, microservices and the practice of software engineering.',
+  wide = false,
 } = Astro.props;
 
 const path = Astro.url.pathname;
@@ -33,7 +35,7 @@ const year = new Date().getFullYear();
     <link rel="alternate" type="application/rss+xml" title="florin.log" href="/rss.xml" />
   </head>
   <body>
-    <div class="shell">
+    <div class:list={['shell', wide && 'shell-wide']}>
       <header class="nav">
         <a class="wordmark" href="/">florin.log</a>
         <nav aria-label="Primary">
