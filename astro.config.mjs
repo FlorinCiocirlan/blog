@@ -5,5 +5,5 @@ import expressiveCode from 'astro-expressive-code';
 
 export default defineConfig({
   site: 'https://florin.log',
-  integrations: [mdx(), sitemap(), expressiveCode()],
+  integrations: [expressiveCode(), mdx(), sitemap()],
 });
