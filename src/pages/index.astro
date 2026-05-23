@@ -7,6 +7,8 @@ const all = (await getCollection('posts', ({ data }) => !data.draft))
 
 const fmt = (d: Date) =>
   d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+const featured = all.slice(0, 3);
 ---
 <BaseLayout>
   <section class="intro">
@@ -16,6 +18,25 @@ const fmt = (d: Date) =>
       practice of building software that holds up.
     </p>
   </section>
+
+  {featured.length > 0 && (
+    <section class="start-here" aria-labelledby="start-here-title">
+      <div>
+        <h2 id="start-here-title">Start here</h2>
+        <p>
+          Practical notes from real product engineering: frontend architecture,
+          platform abstractions, developer experience, and systems that reduce delivery cost.
+        </p>
+      </div>
+      <ul>
+        {featured.map((post) => (
+          <li>
+            <a href={`/posts/${post.id}/`}>{post.data.title}</a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
 
   <section>
     <div class="section-head">
