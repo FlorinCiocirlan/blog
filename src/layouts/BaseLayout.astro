@@ -33,6 +33,16 @@ const year = new Date().getFullYear();
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate" type="application/rss+xml" title="florin.log" href="/rss.xml" />
+
+    <!-- Google tag (gtag.js) -->
+    <script async is:inline src="https://www.googletagmanager.com/gtag/js?id=G-KQ1DVK88T5"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-KQ1DVK88T5');
+    </script>
   </head>
   <body>
     <div class:list={['shell', wide && 'shell-wide']}>
